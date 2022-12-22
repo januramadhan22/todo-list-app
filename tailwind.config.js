@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       colors: {
         primary: "#16ABF8",
+        background: "#F4F4F4",
         indicator: {
           high: "#F8A541",
           medium: "#00A790",
