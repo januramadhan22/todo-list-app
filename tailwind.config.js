@@ -3,8 +3,12 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      fontSize: {
+        "2xs": "10px",
+      },
       colors: {
         primary: "#16ABF8",
+        background: "#F4F4F4",
         indicator: {
           high: "#F8A541",
           medium: "#00A790",
