@@ -14,6 +14,7 @@ function Detail(props) {
   const { id } = props.params;
   const [createModal, setCreateModal] = useState(false);
   const [datas, setDatas] = useState([]);
+  const [activitys, setActivitys] = useState([]);
   const [title, setTitle] = useState("");
   const [priority, setPriority] = useState("");
   const [active, setActive] = useState(true);
@@ -22,7 +23,23 @@ function Detail(props) {
 
   useEffect(() => {
     getListTodo();
+    getActivity();
   }, []);
+
+  const getActivity = () => {
+    axios
+      .get(`https://todo.api.devcode.gethired.id/activity-groups/${id}`)
+      .then((res) => {
+        const results = res.data;
+        setActivitys(results);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   const getListTodo = () => {
     axios
@@ -63,29 +80,26 @@ function Detail(props) {
       });
   };
 
-  const handleUdpate = async () => {
-    // const idList = datas.map((data) => data);
-    const { id } = datas[2];
-    console.log(id);
-    // const body = {
-    //   is_active: active,
-    //   priority: priority,
-    //   title: title,
-    // };
-    // axios
-    //   .patch(`https://todo.api.devcode.gethired.id/todo-items/${id}`, body, {
-    //     "content-type": "application/json; charset=utf-8",
-    //   })
-    //   .then((res) => {
-    //     alert("Success Change List Item");
-    //   })
-    //   .catch((err) => {
-    //     alert(err);
-    //   })
-    //   .finally(() => {
-    //     getListTodo();
-    //     setLoading(true);
-    //   });
+  const handleUdpate = async (id) => {
+    const body = {
+      is_active: active,
+      priority: priority,
+      title: title,
+    };
+    axios
+      .patch(`https://todo.api.devcode.gethired.id/todo-items/${id}`, body, {
+        "content-type": "application/json; charset=utf-8",
+      })
+      .then((res) => {
+        alert("Success Change List Item");
+      })
+      .catch((err) => {
+        alert(err);
+      })
+      .finally(() => {
+        getListTodo();
+        setLoading(true);
+      });
   };
 
   const handleDelete = async (id) => {
@@ -107,7 +121,6 @@ function Detail(props) {
 
   return (
     <div
-      force={true}
       data-cy="detail-page-activity"
       className="w-screen min-h-screen bg-background"
     >
@@ -119,7 +132,12 @@ function Detail(props) {
               <IoIosArrowBack className="w-8 h-8 p-0 fill-black stroke-black stroke-2" />
             </button>
           </Link>
-          <h1 className="text-black text-4xl font-bold">New Activity</h1>
+          <h1
+            data-cy="activity-item-title"
+            className="text-black text-4xl font-bold"
+          >
+            {activitys.title}
+          </h1>
           <button data-cy="edit-button">
             <HiOutlinePencil
               className="w-5 h-5 stroke-gray-400"
@@ -159,7 +177,13 @@ function Detail(props) {
             />
           ))
         ) : (
-          <img src={EmptyTodo} alt="Empty Todo" className="w-[500px]" />
+          <label
+            data-cy="=todo-add-button"
+            htmlFor="my-modal"
+            className="cursor-pointer"
+          >
+            <img src={EmptyTodo} alt="Empty Todo" className="w-[500px]" />
+          </label>
         )}
       </div>
       <CreateModal

@@ -22,7 +22,11 @@ function ListActivity({ title, created, onDelete, onNavigate }) {
           <p data-cy="activity-item-date" className="text-2xs md:text-base">
             {moment(created).format("DD MMMM YYYY")}
           </p>
-          <label htmlFor="my-modal-4" data-cy="modal-delete">
+          <label
+            htmlFor="my-modal-4"
+            data-cy="modal-delete"
+            className="cursor-pointer"
+          >
             <HiOutlineTrash
               className="w-3 h-3 md:w-5 md:h-5"
               viewBox="0 0 24 24"
@@ -59,7 +63,7 @@ function ListActivity({ title, created, onDelete, onNavigate }) {
                 </label>
                 <label
                   data-cy="activity-item-delete-button"
-                  htmlFor="my-modal-3"
+                  htmlFor="my-modal-5"
                   onClick={onDelete}
                   className="px-8 py-2 bg-indicator-very-high text-white font-bold rounded-full cursor-pointer"
                 >
@@ -128,7 +132,7 @@ function ListTodo({ title, priority, active, onDelete, changeStatus }) {
         <label
           htmlFor="my-modal-4"
           data-cy="todo-item-delete-button"
-          // onClick={onDelete}
+          className="cursor-pointer"
         >
           <HiOutlineTrash
             className="w-3 h-3 md:w-6 md:h-6 stroke-gray-400"
@@ -160,7 +164,7 @@ function ListTodo({ title, priority, active, onDelete, changeStatus }) {
                 </label>
                 <label
                   data-cy="modal-delete-confirm-button"
-                  htmlFor="my-modal-3"
+                  htmlFor="my-modal-5"
                   onClick={onDelete}
                   className="px-8 py-2 bg-indicator-very-high text-white font-bold rounded-full cursor-pointer"
                 >
