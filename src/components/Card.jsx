@@ -12,7 +12,7 @@ function ListActivity({ title, created, onDelete, onNavigate }) {
         className="w-36 h-36 md:w-60 md:h-60 px-4 py-3 md:px-7 md:py-6 flex flex-col justify-between bg-white rounded-xl shadow-md mb-4 "
       >
         <h2
-          data-cy="activity-title"
+          data-cy="activity-item-title"
           onClick={onNavigate}
           className="text-sm md:text-lg font-bold cursor-pointer"
         >
