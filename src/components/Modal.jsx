@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
 import { BsFillCircleFill } from "react-icons/bs";
+import { FiAlertCircle } from "react-icons/fi";
 
-function CreateModal({ create, changeTitle, changePriority, priority }) {
+function CreateModal({ create, title, changeTitle, changePriority, priority }) {
   return (
     <>
       <input
@@ -27,7 +28,7 @@ function CreateModal({ create, changeTitle, changePriority, priority }) {
           <form data-cy="name-list-form" className="w-full space-y-3 px-7 my-5">
             <label className="text-sm font-semibold">Nama List Item</label>
             <input
-              data-cy="name-list"
+              data-cy="modal-add-name-input"
               onChange={changeTitle}
               type="text"
               placeholder="Tambahkan nama list item"
@@ -35,7 +36,7 @@ function CreateModal({ create, changeTitle, changePriority, priority }) {
             />
           </form>
           <form
-            data-cy="priority-list-form"
+            data-cy="modal-add-priority-dropdown"
             className="w-full flex flex-col space-y-3 px-7 my-5"
           >
             <label className="text-sm font-semibold">Priority</label>
@@ -54,10 +55,12 @@ function CreateModal({ create, changeTitle, changePriority, priority }) {
           </form>
           <div className="flex justify-end px-7 pt-4 border-t">
             <button
-              data-cy="submit-button"
+              data-cy="modal-add-save-button"
               type="submit"
               onClick={create}
-              className="w-36 h-14 px-4 py-3 bg-primary rounded-full text-lg font-semibold text-white"
+              className={`w-36 h-14 px-4 py-3 bg-primary rounded-full text-lg font-semibold text-white ${
+                title == "" && priority == "" ? "disabled bg-black" : "active"
+              }`}
             >
               Submit
             </button>
@@ -133,4 +136,23 @@ function EditModal({ update, changeTitle, changePriority, priority }) {
   );
 }
 
-export { CreateModal, EditModal };
+function InformationModal() {
+  return (
+    <>
+      <input type="checkbox" id="my-modal-3" className="modal-toggle" />
+      <label htmlFor="my-modal-4" className="modal ">
+        <label
+          className="modal-box relative flex items-center gap-5"
+          htmlFor=""
+        >
+          <FiAlertCircle className="w-6 h-6 stroke-indicator-medium" />
+          <h3 className="text-lg text-center font-bold">
+            Activity berhasil dihapus
+          </h3>
+        </label>
+      </label>
+    </>
+  );
+}
+
+export { CreateModal, EditModal, InformationModal };

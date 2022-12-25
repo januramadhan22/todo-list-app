@@ -12,11 +12,13 @@ import { HiOutlinePlus } from "react-icons/hi";
 import EmptyAct from "../assets/activity-empty-state.svg";
 import Swal from "sweetalert2";
 import Loading from "../components/Loading";
+import { InformationModal } from "../components/Modal";
 
 function Home() {
   const navigate = useNavigate();
   const [datas, setDatas] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [infoModal, setInfoModal] = useState(false);
   const [skeleton] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
   useEffect(() => {
@@ -58,38 +60,16 @@ function Home() {
   };
 
   const handleDelete = async (id) => {
-    Swal.fire({
-      title: `Apakah anda yakin menghapus activity?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#ED4C5C",
-      confirmButtonText: "Hapus",
-      cancelButtonText: `Batal`,
-      reverseButtons: true,
-    })
-      .then((res) => {
-        if (res.isConfirmed) {
-          axios.delete(
-            `https://todo.api.devcode.gethired.id/activity-groups/${id}`
-          );
-          Swal.fire({
-            text: "Activity telah berhasil dihapus",
-            icon: "success",
-            showCancelButton: false,
-            confirmButtonColor: "#3085d6",
-          });
-        } else if (res.isDismissed == `Batal`) {
-          alert("cancel button clicked");
-        }
-      })
+    axios
+      .delete(`https://todo.api.devcode.gethired.id/activity-groups/${id}`)
+      .then((res) => res)
       .catch((err) => {
-        Swal.fire({
-          icon: "error",
-          text: "There is problem on server.",
-        });
+        alert(err);
       })
       .finally(() => {
         fetchData();
+        setLoading(false);
+        setInfoModal(false);
       });
   };
 
@@ -101,9 +81,17 @@ function Home() {
             data-cy="loading"
             className="flex items-center justify-center place-items-center"
           >
-            <Loading />
+            <Loading key={item} />
           </div>
         ))}
+      </>
+    );
+  }
+
+  if (infoModal) {
+    return (
+      <>
+        <InformationModal />
       </>
     );
   }
@@ -112,11 +100,14 @@ function Home() {
     <div data-cy="home-page" className="w-screen min-h-screen bg-background">
       <Navbar />
       <header className="w-full mt-8 md:mt-12 flex items-center justify-between">
-        <h1 className="text-black text-base md:text-4xl font-bold ml-5 md:ml-20 lg:ml-40">
+        <h1
+          data-cy="header-title"
+          className="text-black text-base md:text-4xl font-bold ml-5 md:ml-20 lg:ml-40"
+        >
           Activity
         </h1>
         <button
-          data-cy="create-button"
+          data-cy="activity-add-button"
           type="submit"
           onClick={() => handleCreateActivity()}
           className="w-[100px] h-[37px] md:w-[159px] md:h-[54px] flex justify-center items-center gap-1 box-border rounded-full bg-primary text-white mr-5 md:mr-20 lg:mr-40"
