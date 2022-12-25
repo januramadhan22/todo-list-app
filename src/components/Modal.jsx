@@ -140,7 +140,11 @@ function InformationModal() {
   return (
     <>
       <input type="checkbox" id="my-modal-3" className="modal-toggle" />
-      <label htmlFor="my-modal-4" className="modal ">
+      <label
+        data-cy="modal-information"
+        htmlFor="my-modal-4"
+        className="modal "
+      >
         <label
           className="modal-box relative flex items-center gap-5"
           htmlFor=""

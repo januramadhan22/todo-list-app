@@ -107,6 +107,7 @@ function Detail(props) {
 
   return (
     <div
+      force={true}
       data-cy="detail-page-activity"
       className="w-screen min-h-screen bg-background"
     >
