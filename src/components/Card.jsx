@@ -19,10 +19,10 @@ function ListActivity({ title, created, onDelete, onNavigate }) {
           {title}
         </h2>
         <div className="w-full flex justify-between items-center text-gray-400 text-sm">
-          <p data-cy="date" className="text-2xs md:text-base">
+          <p data-cy="activity-item-date" className="text-2xs md:text-base">
             {moment(created).format("DD MMMM YYYY")}
           </p>
-          <label htmlFor="my-modal-4" data-cy="activity-item-delete-button">
+          <label htmlFor="my-modal-4" data-cy="modal-delete">
             <HiOutlineTrash
               className="w-3 h-3 md:w-5 md:h-5"
               viewBox="0 0 24 24"
@@ -31,7 +31,12 @@ function ListActivity({ title, created, onDelete, onNavigate }) {
         </div>
       </div>
       <>
-        <input type="checkbox" id="my-modal-4" className="modal-toggle" />
+        <input
+          data-cy="modal-delete"
+          type="checkbox"
+          id="my-modal-4"
+          className="modal-toggle"
+        />
         <label htmlFor="my-modal-4" className="modal">
           <label
             data-cy="activity-item-delete-button"
@@ -67,7 +72,7 @@ function ListActivity({ title, created, onDelete, onNavigate }) {
       </>
 
       <>
-        <InformationModal data-cy="modal-information" />
+        <InformationModal />
       </>
     </>
   );
