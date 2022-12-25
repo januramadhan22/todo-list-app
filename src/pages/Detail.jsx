@@ -89,37 +89,15 @@ function Detail(props) {
   };
 
   const handleDelete = async (id) => {
-    Swal.fire({
-      title: `Apakah anda yakin menghapus todo?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#ED4C5C",
-      confirmButtonText: "Hapus",
-      cancelButtonText: `Batal`,
-      reverseButtons: true,
-    })
-      .then((res) => {
-        if (res.isConfirmed) {
-          axios.delete(`https://todo.api.devcode.gethired.id/todo-items/${id}`);
-          Swal.fire({
-            text: "Todo telah berhasil dihapus",
-            icon: "success",
-            showCancelButton: false,
-            confirmButtonColor: "#3085d6",
-          });
-        } else if (res.isDismissed == `Batal`) {
-          alert("cancel button clicked");
-        }
-      })
+    axios
+      .delete(`https://todo.api.devcode.gethired.id/todo-items/${id}`)
+      .then((res) => res)
       .catch((err) => {
-        Swal.fire({
-          icon: "error",
-          text: "There is problem on server.",
-        });
+        alert(err);
       })
       .finally(() => {
         getListTodo();
-        setLoading(true);
+        setLoading(false);
       });
   };
 
@@ -149,7 +127,7 @@ function Detail(props) {
           </button>
         </div>
         <label
-          data-cy="create-modal-button"
+          data-cy="=todo-add-button"
           htmlFor="my-modal"
           className="w-[159px] h-[54px] flex justify-center items-center gap-1 box-border rounded-full bg-primary text-white mr-40 cursor-pointer"
         >
@@ -185,6 +163,7 @@ function Detail(props) {
       </div>
       <CreateModal
         create={() => handleCreateTodo()}
+        title={title}
         changeTitle={(e) => setTitle(e.target.value)}
         changePriority={(e) => setPriority(e.target.value)}
         priority={priority}
