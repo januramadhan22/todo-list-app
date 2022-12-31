@@ -1,7 +1,8 @@
 import "../styles/index.css";
+import { useAppState } from "../utils/contexts/appState";
+import { addTodo, getTodoList } from "../utils/actions/todoAction";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import Navbar from "../components/Navbar";
@@ -10,91 +11,41 @@ import { WithRouter } from "../utils/Navigation";
 
 import { HiOutlinePlus } from "react-icons/hi";
 import EmptyAct from "../assets/activity-empty-state.svg";
-import Swal from "sweetalert2";
-import Loading from "../components/Loading";
 import { InformationModal } from "../components/Modal";
 
 function Home() {
+  const [state, dispatch] = useAppState();
+  const { getTodoResults, getTodoLoading, getTodoError, addTodoResults } =
+    state;
   const navigate = useNavigate();
-  const [datas, setDatas] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [infoModal, setInfoModal] = useState(false);
-  const [skeleton] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    getTodoList(dispatch);
+  }, [dispatch]);
 
-  const fetchData = () => {
-    axios
-      .get(
-        `https://todo.api.devcode.gethired.id/activity-groups?email=abbyjunior600@gmail.com`
-      )
-      .then((res) => {
-        const results = res.data.data;
-        setDatas(results);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+  useEffect(() => {
+    if (addTodoResults) {
+      getTodoList(dispatch);
+    }
+  }, [addTodoResults, dispatch]);
+
+  const handleCreate = (e) => {
+    e.preventDefault();
+
+    addTodo(dispatch, {
+      title: "New Activity",
+      email: "abbyjunior600@gmail.com",
+    });
   };
 
-  const handleCreateActivity = async () => {
-    setLoading(true);
-    const body = { title: "New Activity", email: `abbyjunior600@gmail.com` };
-    axios
-      .post(`https://todo.api.devcode.gethired.id/activity-groups`, body)
-      .then((res) => {
-        alert("Success Create User");
-      })
-      .catch((err) => {
-        alert(err);
-      })
-      .finally(() => {
-        fetchData();
-        setLoading(false);
-      });
-  };
-
-  const handleDelete = async (id) => {
-    axios
-      .delete(`https://todo.api.devcode.gethired.id/activity-groups/${id}`)
-      .then((res) => res)
-      .catch((err) => {
-        alert(err);
-      })
-      .finally(() => {
-        fetchData();
-        setLoading(false);
-        setInfoModal(false);
-      });
-  };
-
-  if (loading) {
-    return (
-      <>
-        {skeleton.map((item) => (
-          <div
-            data-cy="loading"
-            className="flex items-center justify-center place-items-center"
-          >
-            <Loading key={item} />
-          </div>
-        ))}
-      </>
-    );
-  }
-
-  if (infoModal) {
-    return (
-      <>
-        <InformationModal />
-      </>
-    );
-  }
+  // if (infoModal) {
+  //   return (
+  //     <>
+  //       <InformationModal />
+  //     </>
+  //   );
+  // }
 
   return (
     <div data-cy="home-page" className="w-screen min-h-screen bg-background">
@@ -109,7 +60,7 @@ function Home() {
         <button
           data-cy="activity-add-button"
           type="submit"
-          onClick={() => handleCreateActivity()}
+          onClick={(e) => handleCreate(e)}
           className="w-[100px] h-[37px] md:w-[159px] md:h-[54px] flex justify-center items-center gap-1 box-border rounded-full bg-primary text-white mr-5 md:mr-20 lg:mr-40"
         >
           <HiOutlinePlus
@@ -122,33 +73,37 @@ function Home() {
       <div
         data-cy="list-activity"
         className={
-          datas.length !== 0
+          getTodoResults !== 0
             ? "grid grid-cols-2 lg:grid-cols-4 items-center justify-center place-items-center mx-5 md:mx-20 lg:mx-40 my-9 md:my-12 gap-5"
             : "w-full flex justify-center my-12"
         }
       >
-        <>
-          {datas.length !== 0 ? (
-            datas.map((data) => (
+        {getTodoResults ? (
+          getTodoResults.map((todo) => {
+            return (
               <ListActivity
-                key={data.id}
-                id={data.id}
-                title={data.title}
-                created={data.created_at}
-                onDelete={() => handleDelete(data?.id)}
-                onNavigate={() => navigate(`/activity-groups/${data.id}`)}
+                key={todo.id}
+                id={todo.id}
+                title={todo.title}
+                created={todo.created_at}
+                // onDelete={() => handleDelete(todo?.id)}
+                onNavigate={() => navigate(`/activity-groups/${todo.id}`)}
               />
-            ))
-          ) : (
-            <button
-              data-cy="create-button"
-              type="submit"
-              onClick={() => handleCreateActivity()}
-            >
-              <img src={EmptyAct} alt="Empty Activity" className="w-[500px]" />
-            </button>
-          )}
-        </>
+            );
+          })
+        ) : getTodoLoading ? (
+          <p>Loading...</p>
+        ) : getTodoError ? (
+          getTodoError
+        ) : (
+          <button
+            todo-cy="create-button"
+            type="submit"
+            // onClick={() => handleCreateActivity()}
+          >
+            <img src={EmptyAct} alt="Empty Activity" className="w-[500px]" />
+          </button>
+        )}
       </div>
     </div>
   );
