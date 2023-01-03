@@ -8,30 +8,53 @@ import { WithRouter } from "../utils/Navigation";
 import { Link } from "react-router-dom";
 import { ListTodo } from "../components/Card";
 import { CreateModal, EditModal } from "../components/Modal";
-import Swal from "sweetalert2";
+
+import { useAppState } from "../utils/contexts/appState";
+import { updateTodo } from "../utils/actions/todoAction";
+import { getItemList } from "../utils/actions/itemAction";
 
 function Detail(props) {
   const { id } = props.params;
-  const [createModal, setCreateModal] = useState(false);
-  const [datas, setDatas] = useState([]);
-  const [activitys, setActivitys] = useState([]);
+  // const [createModal, setCreateModal] = useState(false);
+  // const [datas, setDatas] = useState([]);
+  const [activity, setActivity] = useState({});
   const [title, setTitle] = useState("");
-  const [priority, setPriority] = useState("");
-  const [active, setActive] = useState(true);
+  // const [priority, setPriority] = useState("");
+  // const [active, setActive] = useState(true);
   const [loading, setLoading] = useState(true);
-  const [skeleton] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+  const [state, dispatch] = useAppState();
+  const { updateTodoResults, getItemResults, getItemLoading, getItemError } =
+    state;
 
   useEffect(() => {
-    getListTodo();
     getActivity();
   }, []);
+
+  useEffect(() => {
+    console.log(getItemResults);
+    getItemList(dispatch, id);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (updateTodoResults) {
+      getActivity();
+      setTitle(title);
+    }
+  }, [updateTodoResults, dispatch]);
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+
+    updateTodo(dispatch, { id: id, title: title });
+  };
 
   const getActivity = () => {
     axios
       .get(`https://todo.api.devcode.gethired.id/activity-groups/${id}`)
       .then((res) => {
         const results = res.data;
-        setActivitys(results);
+        setActivity(results);
       })
       .catch((err) => {
         console.log(err);
@@ -41,79 +64,62 @@ function Detail(props) {
       });
   };
 
-  const getListTodo = () => {
-    axios
-      .get(
-        `https://todo.api.devcode.gethired.id/todo-items?activity_group_id=${id}`
-      )
-      .then((res) => {
-        const results = res.data.data;
-        setDatas(results);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+  // const handleCreateTodo = async () => {
+  //   const body = {
+  //     activity_group_id: id,
+  //     priority: priority,
+  //     title: title,
+  //   };
+  //   axios
+  //     .post(`https://todo.api.devcode.gethired.id/todo-items`, body, {
+  //       "content-type": "application/json; charset=utf-8",
+  //     })
+  //     .then((res) => {
+  //       alert("Success Create Todo");
+  //     })
+  //     .catch((err) => {
+  //       alert(err);
+  //     })
+  //     .finally(() => {
+  //       getListTodo();
+  //       setLoading(true);
+  //     });
+  // };
 
-  const handleCreateTodo = async () => {
-    const body = {
-      activity_group_id: id,
-      priority: priority,
-      title: title,
-    };
-    axios
-      .post(`https://todo.api.devcode.gethired.id/todo-items`, body, {
-        "content-type": "application/json; charset=utf-8",
-      })
-      .then((res) => {
-        alert("Success Create Todo");
-      })
-      .catch((err) => {
-        alert(err);
-      })
-      .finally(() => {
-        getListTodo();
-        setLoading(true);
-      });
-  };
+  // const handleUdpate = async (id) => {
+  //   const body = {
+  //     is_active: active,
+  //     priority: priority,
+  //     title: title,
+  //   };
+  //   axios
+  //     .patch(`https://todo.api.devcode.gethired.id/todo-items/${id}`, body, {
+  //       "content-type": "application/json; charset=utf-8",
+  //     })
+  //     .then((res) => {
+  //       alert("Success Change List Item");
+  //     })
+  //     .catch((err) => {
+  //       alert(err);
+  //     })
+  //     .finally(() => {
+  //       getListTodo();
+  //       setLoading(true);
+  //     });
+  // };
 
-  const handleUdpate = async (id) => {
-    const body = {
-      is_active: active,
-      priority: priority,
-      title: title,
-    };
-    axios
-      .patch(`https://todo.api.devcode.gethired.id/todo-items/${id}`, body, {
-        "content-type": "application/json; charset=utf-8",
-      })
-      .then((res) => {
-        alert("Success Change List Item");
-      })
-      .catch((err) => {
-        alert(err);
-      })
-      .finally(() => {
-        getListTodo();
-        setLoading(true);
-      });
-  };
-
-  const handleDelete = async (id) => {
-    axios
-      .delete(`https://todo.api.devcode.gethired.id/todo-items/${id}`)
-      .then((res) => res)
-      .catch((err) => {
-        alert(err);
-      })
-      .finally(() => {
-        getListTodo();
-        setLoading(false);
-      });
-  };
+  // const handleDelete = async (id) => {
+  //   axios
+  //     .delete(`https://todo.api.devcode.gethired.id/todo-items/${id}`)
+  //     .then((res) => res)
+  //     .catch((err) => {
+  //       alert(err);
+  //     })
+  //     .finally(() => {
+  //       getListTodo();
+  //       setLoading(false);
+  //     });
+  // };
 
   if (loading) {
     return <div className="w-full flex justify-center">Loading...</div>;
@@ -126,24 +132,36 @@ function Detail(props) {
     >
       <Navbar />
       <header className="w-full mt-12 flex items-center justify-between">
-        <div className="ml-40 flex items-baseline gap-4 text-black">
+        <div className="w-full ml-40 flex items-baseline gap-4 text-black">
           <Link to="/">
             <button data-cy="back-button">
               <IoIosArrowBack className="w-8 h-8 p-0 fill-black stroke-black stroke-2" />
             </button>
           </Link>
-          <h1
-            data-cy="activity-item-title"
-            className="text-black text-4xl font-bold"
+          <form
+            type="submit"
+            className="w-full flex items-baseline"
+            onSubmit={(e) => handleUpdate(e)}
           >
-            {activitys.title}
-          </h1>
-          <button data-cy="edit-button">
+            <input
+              type="text"
+              data-cy="activity-item-title"
+              className="w-56 min-h-16 bg-transparent text-black placeholder:text-black py-1 text-4xl font-bold  focus:outline-none focus:border-b focus:border-b-gray-300 focus:w-10/12 ease duration-300 "
+              placeholder={activity.title}
+              onChange={(e) => setTitle(e.target.value)}
+              value={title}
+              prefix={
+                <HiOutlinePencil
+                  className="w-5 h-5 stroke-gray-400"
+                  viewBox="0 0 24 24"
+                />
+              }
+            />
             <HiOutlinePencil
               className="w-5 h-5 stroke-gray-400"
               viewBox="0 0 24 24"
             />
-          </button>
+          </form>
         </div>
         <label
           data-cy="=todo-add-button"
@@ -157,25 +175,26 @@ function Detail(props) {
       <div
         data-cy="list-item"
         className={
-          datas.length !== 0
+          getItemResults
             ? "w-full h-full px-40 my-14 flex flex-col justify-center items-start "
             : "w-full h-full my-14 flex justify-center items-start"
         }
       >
-        {datas.length !== 0 ? (
-          datas.map((list) => (
-            <ListTodo
-              key={list.id}
-              title={list.title}
-              priority={list.priority}
-              active={list.is_active}
-              // changeStatus={(e) => {
-              //   setActive(e.target.list.is_active.value);
-              //   e.target.list.is_active.value = 0;
-              // }}
-              onDelete={() => handleDelete(list.id)}
-            />
-          ))
+        {/* {getItemResults ? (
+          getItemResults.map((item) => {
+            return (
+              <ListTodo
+                key={item.id}
+                title={item.title}
+                priority={item.priority}
+                active={item.is_active}
+              />
+            );
+          })
+        ) : getItemLoading ? (
+          <p>Loading Sek Lurrr . . .</p>
+        ) : getItemError ? (
+          getItemError
         ) : (
           <label
             data-cy="=todo-add-button"
@@ -184,23 +203,8 @@ function Detail(props) {
           >
             <img src={EmptyTodo} alt="Empty Todo" className="w-[500px]" />
           </label>
-        )}
+        )} */}
       </div>
-      <CreateModal
-        create={() => handleCreateTodo()}
-        title={title}
-        changeTitle={(e) => setTitle(e.target.value)}
-        changePriority={(e) => setPriority(e.target.value)}
-        priority={priority}
-      />
-      <EditModal
-        update={(id) => handleUdpate(id)}
-        changeTitle={(e) => setTitle(e.target.value)}
-        changePriority={(e) => setPriority(e.target.value)}
-        priority={priority}
-        changeStatus={(e) => setActive(e.target.value)}
-        status={active}
-      />
     </div>
   );
 }

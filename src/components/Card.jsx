@@ -6,79 +6,36 @@ import { FiAlertTriangle } from "react-icons/fi";
 
 function ListActivity({ title, created, onDelete, onNavigate }) {
   return (
-    <>
-      <div
-        data-cy="activity-item"
-        className="w-36 h-36 md:w-60 md:h-60 px-4 py-3 md:px-7 md:py-6 flex flex-col justify-between bg-white rounded-xl shadow-md mb-4 "
-      >
+    <div
+      data-cy="activity-item"
+      className="w-36 h-36 md:w-60 md:h-60 px-4 py-3 md:px-7 md:py-6 flex flex-col justify-between bg-white rounded-xl shadow-md mb-4 "
+      onClick={onNavigate}
+    >
+      <span className="w-full h-full flex flex-col justify-between cursor-pointer">
         <h2
           data-cy={"activity-item-title" || "activity-title"}
-          onClick={onNavigate}
           className="text-sm md:text-lg font-bold cursor-pointer"
         >
           {title}
         </h2>
-        <div className="w-full flex justify-between items-center text-gray-400 text-sm">
-          <p data-cy="activity-item-date" className="text-2xs md:text-base">
-            {moment(created).format("DD MMMM YYYY")}
-          </p>
-          <label
-            htmlFor="my-modal-4"
-            data-cy="modal-delete"
-            className="cursor-pointer"
-          >
-            <HiOutlineTrash
-              className="w-3 h-3 md:w-5 md:h-5"
-              viewBox="0 0 24 24"
-            />
-          </label>
-        </div>
-      </div>
-      <>
-        <input
+      </span>
+      <div className="w-full flex justify-between items-center text-gray-400 text-sm">
+        <p data-cy="activity-item-date" className="text-2xs md:text-base">
+          {moment(created).format("DD MMMM YYYY")}
+        </p>
+        <button
           data-cy="modal-delete"
-          type="checkbox"
-          id="my-modal-4"
-          className="modal-toggle"
-        />
-        <label htmlFor="my-modal-4" className="modal">
-          <label
-            data-cy="activity-item-delete-button"
-            className="modal-box relative"
-            htmlFor=""
-          >
-            <div className="w-full flex flex-col items-center gap-7">
-              <FiAlertTriangle className="w-16 h-16 stroke-indicator-very-high" />
-              <h3 className="text-lg text-center font-medium">
-                Apakah anda ingin menghapus activity <br />
-                <strong>"{title}"</strong>
-              </h3>
-              <div className="w-full flex justify-center gap-5">
-                <label
-                  data-cy="modal-delete-cancel-button"
-                  htmlFor="my-modal-4"
-                  className="px-8 py-2 bg-background text-gray-600 font-bold rounded-full cursor-pointer"
-                >
-                  Batal
-                </label>
-                <label
-                  data-cy="activity-item-delete-button"
-                  htmlFor="my-modal-5"
-                  onClick={onDelete}
-                  className="px-8 py-2 bg-indicator-very-high text-white font-bold rounded-full cursor-pointer"
-                >
-                  Hapus
-                </label>
-              </div>
-            </div>
-          </label>
-        </label>
-      </>
-
-      <>
-        <InformationModal />
-      </>
-    </>
+          type="submit"
+          onClick={onDelete}
+          className="cursor-pointer"
+        >
+          <HiOutlineTrash
+            className="w-3 h-3 md:w-5 md:h-5"
+            viewBox="0 0 24 24"
+          />
+        </button>
+      </div>
+    </div>
   );
 }
 
