@@ -1,6 +1,6 @@
 import "../styles/index.css";
 import { useAppState } from "../utils/contexts/appState";
-import { addTodo, getTodoList } from "../utils/actions/todoAction";
+import { addTodo, deleteTodo, getTodoList } from "../utils/actions/todoAction";
 
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -15,8 +15,13 @@ import { InformationModal } from "../components/Modal";
 
 function Home() {
   const [state, dispatch] = useAppState();
-  const { getTodoResults, getTodoLoading, getTodoError, addTodoResults } =
-    state;
+  const {
+    getTodoResults,
+    getTodoLoading,
+    getTodoError,
+    addTodoResults,
+    deleteTodoResults,
+  } = state;
   const navigate = useNavigate();
   const [infoModal, setInfoModal] = useState(false);
 
@@ -29,6 +34,12 @@ function Home() {
       getTodoList(dispatch);
     }
   }, [addTodoResults, dispatch]);
+
+  useEffect(() => {
+    if (deleteTodoResults) {
+      getTodoList(dispatch);
+    }
+  }, [dispatch, deleteTodoResults]);
 
   const handleCreate = (e) => {
     e.preventDefault();
@@ -73,9 +84,9 @@ function Home() {
       <div
         data-cy="list-activity"
         className={
-          getTodoResults !== 0
-            ? "grid grid-cols-2 lg:grid-cols-4 items-center justify-center place-items-center mx-5 md:mx-20 lg:mx-40 my-9 md:my-12 gap-5"
-            : "w-full flex justify-center my-12"
+          getTodoResults
+            ? "grid grid-cols-2 lg:grid-cols-4 items-center justify-center place-items-center mx-5 md:mx-20 lg:mx-40 mt-9 md:mt-12 gap-5"
+            : "w-full flex justify-center mt-12"
         }
       >
         {getTodoResults ? (
@@ -86,7 +97,7 @@ function Home() {
                 id={todo.id}
                 title={todo.title}
                 created={todo.created_at}
-                // onDelete={() => handleDelete(todo?.id)}
+                onDelete={() => deleteTodo(dispatch, todo.id)}
                 onNavigate={() => navigate(`/activity-groups/${todo.id}`)}
               />
             );
@@ -99,7 +110,7 @@ function Home() {
           <button
             todo-cy="create-button"
             type="submit"
-            // onClick={() => handleCreateActivity()}
+            onClick={(e) => handleCreate(e)}
           >
             <img src={EmptyAct} alt="Empty Activity" className="w-[500px]" />
           </button>
