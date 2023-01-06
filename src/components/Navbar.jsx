@@ -4,7 +4,7 @@ function Navbar() {
   return (
     <div
       data-cy="navbar"
-      className="w-screen h-16 md:h-[105px] flex items-center bg-primary shadow-md"
+      className="w-full h-16 md:h-[105px] flex items-center bg-primary shadow-md"
     >
       <h1
         data-cy="header-title"
