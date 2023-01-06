@@ -39,7 +39,7 @@ function Home() {
     if (deleteTodoResults) {
       getTodoList(dispatch);
     }
-  }, [dispatch, deleteTodoResults]);
+  }, [deleteTodoResults, dispatch]);
 
   const handleCreate = (e) => {
     e.preventDefault();

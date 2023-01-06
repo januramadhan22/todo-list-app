@@ -2,6 +2,7 @@ import todoReducer from "./todo";
 import itemReducer from "./item";
 
 const initialState = {
+  //State for todo
   getTodoResults: false,
   getTodoError: false,
   getTodoLoading: false,
@@ -18,9 +19,22 @@ const initialState = {
   updateTodoError: false,
   updateTodoLoading: false,
 
+  //State for item
   getItemResults: false,
   getItemError: false,
   getItemLoading: false,
+
+  addItemResults: false,
+  addItemError: false,
+  addItemLoading: false,
+
+  deleteItemResults: false,
+  deleteItemError: false,
+  deleteItemLoading: false,
+
+  updateItemResults: false,
+  updateItemError: false,
+  updateItemLoading: false,
 };
 
 const combineReducers = (reducers) => {

@@ -20,6 +20,7 @@ export const getTodoList = (dispatch) => {
   axios({
     method: "GET",
     url: "https://todo.api.devcode.gethired.id/activity-groups?email=abbyjunior600@gmail.com",
+    timeout: 120000,
   })
     .then((response) => {
       dispatch({
@@ -79,10 +80,20 @@ export const addTodo = (dispatch, data) => {
           errorMessage: error.message,
         },
       });
+    })
+    .finally(() => {
+      dispatch({
+        type: ADD_TODO,
+        payload: {
+          loading: false,
+          data: data,
+          errorMessage: false,
+        },
+      });
     });
 };
 
-export const deleteTodo = (dispatch, id) => {
+export const deleteTodo = (dispatch, id, data) => {
   //loading
   dispatch({
     type: DELETE_TODO_LIST,
@@ -96,6 +107,7 @@ export const deleteTodo = (dispatch, id) => {
   axios({
     method: "DELETE",
     url: `https://todo.api.devcode.gethired.id/activity-groups/${id}`,
+    data: data,
   })
     .then((response) => {
       dispatch({
@@ -115,6 +127,16 @@ export const deleteTodo = (dispatch, id) => {
           loading: false,
           data: false,
           errorMessage: error.message,
+        },
+      });
+    })
+    .finally(() => {
+      dispatch({
+        type: DELETE_TODO_LIST,
+        payload: {
+          loading: false,
+          data: data,
+          errorMessage: false,
         },
       });
     });
@@ -190,6 +212,16 @@ export const updateTodo = (dispatch, data) => {
           loading: false,
           data: false,
           errorMessage: error.message,
+        },
+      });
+    })
+    .finally(() => {
+      dispatch({
+        type: UPDATE_TODO,
+        payload: {
+          loading: false,
+          data: data,
+          errorMessage: false,
         },
       });
     });
