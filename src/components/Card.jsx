@@ -120,11 +120,11 @@ function ListTodo({ title, priority, activityId, itemId }) {
           >
             <span
               className={`w-2 h-2 rounded-full 
-            ${priority === "very-high" ? "bg-red-500" : "bg-black"}
-            ${priority === "high" ? "bg-orange-400" : "bg-black"}
-            ${priority === "normal" ? "bg-indicator-medium" : "bg-black"}
-            ${priority === "low" ? "bg-indicator-low" : "bg-black"}
-            ${priority === "very-low" ? "bg-indicator-very-low" : "bg-black"}
+            ${priority === "very-high" && "bg-indicator-very-high"}
+            ${priority === "high" && "bg-orange-400"}
+            ${priority === "normal" && "bg-indicator-medium"}
+            ${priority === "low" && "bg-indicator-low"}
+            ${priority === "very-low" && "bg-indicator-very-low"}
             `}
             ></span>
             <p data-cy="title-list" className={`text-lg font-medium `}>
@@ -150,7 +150,7 @@ function ListTodo({ title, priority, activityId, itemId }) {
           className="cursor-pointer"
         >
           <HiOutlineTrash
-            className="w-3 h-3 md:w-6 md:h-6 stroke-gray-400 hover:scale-125 active:brightness-75"
+            className="w-5 h-5 md:w-6 md:h-6 stroke-gray-400 hover:scale-125 active:brightness-75"
             viewBox="0 0 24 24"
           />
         </button>
@@ -161,7 +161,7 @@ function ListTodo({ title, priority, activityId, itemId }) {
             onClick={() => setDeleteModal(!deleteModal)}
             className="overlay"
           ></div>
-          <div className="modal-content">
+          <div className="modal-content h-[288px] w-[360px] md:w-[400] ">
             <DeleteModalItem
               onModal={() => setDeleteModal(!deleteModal)}
               id={itemId}
@@ -177,7 +177,7 @@ function ListTodo({ title, priority, activityId, itemId }) {
             onClick={() => setEditModal(!editModal)}
             className="overlay"
           ></div>
-          <div className="modal-edit">
+          <div className="modal-edit h-[403px] w-[340px] md:w-[670px] lg:w-[830px]">
             <EditModal
               onModal={() => setEditModal(!editModal)}
               id={itemId}

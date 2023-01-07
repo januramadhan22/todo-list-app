@@ -71,7 +71,7 @@ function CreateModal({ onModal, activityId }) {
             data-cy="priority-list"
             onChange={(e) => setPriority(e.target.value)}
             value={priority}
-            className="w-52 px-4 py-3 flex items-center justify-between border rounded-lg cursor-pointer"
+            className="w-full md:w-52 px-4 py-3 flex items-center justify-between border rounded-lg cursor-pointer"
           >
             <option value="very-high">Very High</option>
             <option value="high">High</option>
@@ -80,12 +80,12 @@ function CreateModal({ onModal, activityId }) {
             <option value="very-low">Very Low</option>
           </select>
         </form>
-        <div className="flex justify-end px-7 pt-4 border-t">
+        <div className="flex justify-center md:justify-end px-7 pt-4 border-t">
           <button
             onClick={(e) => handleCreate(e)}
             data-cy="submit-button"
             type="submit"
-            className="w-36 h-14 px-4 py-3 bg-primary rounded-full text-lg font-semibold text-white"
+            className="px-8 py-3 bg-primary rounded-lg text-lg font-semibold border-2 border-primary text-white hover:bg-white hover:text-primary active:scale-90"
           >
             Submit
           </button>
@@ -158,7 +158,7 @@ function EditModal({ onModal, title, id, activityId, valPriority }) {
             data-cy="priority-list"
             onChange={(e) => setPriority(e.target.value)}
             value={priority}
-            className="w-52 px-4 py-3 flex items-center justify-between border rounded-lg cursor-pointer"
+            className="w-full md:w-52 px-4 py-3 flex items-center justify-between border rounded-lg cursor-pointer"
           >
             <option value="very-high">Very High</option>
             <option value="high">High</option>
@@ -167,12 +167,12 @@ function EditModal({ onModal, title, id, activityId, valPriority }) {
             <option value="very-low">Very Low</option>
           </select>
         </form>
-        <div className="flex justify-end px-7 pt-4 border-t">
+        <div className="flex justify-center md:justify-end px-7 pt-4 border-t">
           <button
             data-cy="submit-button"
             type="submit"
             onClick={(e) => handleUpdate(e)}
-            className="w-36 h-14 px-4 py-3 bg-primary rounded-full text-lg font-semibold text-white"
+            className="px-8 py-3 bg-primary rounded-lg text-lg font-semibold border-2 border-primary text-white hover:bg-white hover:text-primary active:scale-90"
           >
             Submit
           </button>
