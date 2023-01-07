@@ -97,10 +97,10 @@ function Detail(props) {
       >
         <Navbar />
         <header className="w-full mt-12 flex items-center justify-between">
-          <div className="w-full ml-40 flex items-baseline gap-4 text-black">
+          <div className="w-full ml-4 md:ml-20 lg:ml-40 flex items-baseline gap-2 md:gap-4 text-black">
             <Link to="/">
               <button data-cy="back-button">
-                <IoIosArrowBack className="w-8 h-8 p-0 fill-black stroke-black stroke-2" />
+                <IoIosArrowBack className="w-5 h-5 md:w-8 md:h-8 p-0 fill-black stroke-black stroke-2" />
               </button>
             </Link>
             <form
@@ -111,7 +111,7 @@ function Detail(props) {
               <input
                 type="text"
                 data-cy="activity-item-title"
-                className="w-56 min-h-16 bg-transparent text-black placeholder:text-black py-1 text-4xl font-bold  focus:outline-none focus:border-b focus:border-b-gray-300 focus:w-10/12 ease duration-300 "
+                className="w-40 md:w-64 min-h-16 bg-transparent text-black placeholder:text-black py-1 text-2xl md:text-4xl font-bold  focus:outline-none focus:border-b focus:border-b-gray-300 focus:w-10/12 ease duration-300 "
                 placeholder={activity.title}
                 onChange={(e) => setTitle(e.target.value)}
                 value={title}
@@ -131,22 +131,34 @@ function Detail(props) {
           <button
             onClick={() => setCreateModal(!createModal)}
             type="submit"
-            data-cy="=todo-add-button"
-            className="w-[159px] h-[54px] flex justify-center items-center gap-1 box-border rounded-full bg-primary text-white mr-40 cursor-pointer"
+            data-cy="todo-add-button"
+            className="p-1.5 md:px-6 md:py-2 flex justify-center items-center gap-1 box-border border-2 border-primary rounded-lg bg-primary md:text-lg text-white mr-4 md:mr-20 lg:mr-40 hover:bg-white hover:text-primary active:scale-90"
           >
-            <HiOutlinePlus className="w-5 h-5" viewBox="0 0 24 24" />
-            <p className="text-lg font-semibold">Tambah</p>
+            <HiOutlinePlus
+              className="w-4 h-4 md:w-5 md:h-5"
+              viewBox="0 0 24 24"
+            />
+            <p className="hidden md:block font-semibold">Tambah</p>
           </button>
         </header>
         <div
           data-cy="list-item"
           className={
-            getItemResults
-              ? "w-full h-full px-40 py-14 flex flex-col justify-center items-start"
-              : "w-full h-full my-14 flex justify-center items-start"
+            getItemResults.length !== 0
+              ? "w-full h-full px-5 md:px-20 lg:px-40 py-6 md:py-14 flex flex-col justify-center items-start"
+              : "w-full h-full py-14 px-5 flex justify-center items-start"
           }
         >
-          {getItemResults ? (
+          {getItemResults.length == 0 ? (
+            <button
+              onClick={() => setCreateModal(!createModal)}
+              type="submit"
+              data-cy="=todo-add-button"
+              className="cursor-pointer"
+            >
+              <img src={EmptyTodo} alt="Empty Todo" className="w-[500px]" />
+            </button>
+          ) : getItemResults ? (
             getItemResults.map((item) => {
               return (
                 <ListTodo
@@ -180,7 +192,7 @@ function Detail(props) {
             onClick={() => setCreateModal(!createModal)}
             className="overlay"
           ></div>
-          <div className="modal-edit">
+          <div className="modal-edit h-[403px] w-[340px] md:w-[670px] lg:w-[830px]">
             <CreateModal
               onModal={() => setCreateModal(!createModal)}
               activityId={id}

@@ -10,7 +10,7 @@ function Navbar() {
         data-cy="header-title"
         className="text-white text-lg md:text-2xl font-semibold ml-4 md:ml-20 lg:ml-40"
       >
-        TO DO LIST APP
+        Mau Ngapain Hari Ini ?
       </h1>
     </div>
   );
